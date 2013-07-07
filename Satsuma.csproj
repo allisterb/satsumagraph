@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3C752CC8-07E6-41BC-8089-E000E9CC16FC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Satsuma</RootNamespace>
+    <AssemblyName>Satsuma</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>satsuma.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\BellmanFord.cs" />
+    <Compile Include="src\Bfs.cs" />
+    <Compile Include="src\CompleteBipartiteGraph.cs" />
+    <Compile Include="src\CompleteGraph.cs" />
+    <Compile Include="src\Connectivity.cs" />
+    <Compile Include="src\ContractedGraph.cs" />
+    <Compile Include="src\Dijsktra.cs" />
+    <Compile Include="src\DisjointSet.cs" />
+    <Compile Include="src\Drawing.cs" />
+    <Compile Include="src\Graph.cs" />
+    <Compile Include="src\IO.cs" />
+    <Compile Include="src\IO.GraphML.cs" />
+    <Compile Include="src\Layout.cs" />
+    <Compile Include="src\Matching.cs" />
+    <Compile Include="src\MaximumMatching.cs" />
+    <Compile Include="src\MinimumCostMatching.cs" />
+    <Compile Include="src\NetworkSimplex.cs" />
+    <Compile Include="src\Path.cs" />
+    <Compile Include="src\Preflow.cs" />
+    <Compile Include="src\PriorityQueue.cs" />
+    <Compile Include="src\RedirectedGraph.cs" />
+    <Compile Include="src\ReverseGraph.cs" />
+    <Compile Include="src\AStar.cs" />
+    <Compile Include="src\SpanningForest.cs" />
+    <Compile Include="src\Subgraph.cs" />
+    <Compile Include="src\Supergraph.cs" />
+    <Compile Include="src\Dfs.cs" />
+    <Compile Include="src\Tsp.cs" />
+    <Compile Include="src\UndirectedGraph.cs" />
+    <Compile Include="src\Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="satsuma.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
