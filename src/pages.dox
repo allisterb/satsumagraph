@@ -7,6 +7,10 @@ Satsuma is a graph library for .NET, written in C#. The goal was to create an ea
 
 Satsuma is released under the \ref p_license "zlib license". This license is very permissive and allows you to use Satsuma for both personal and commercial purposes.
 
+- <a href='https://sourceforge.net/projects/satsumagraph/files'>Downloads</a>
+- <a href='https://sourceforge.net/p/satsumagraph/tickets'>Issue tracker</a>
+- <a href='https://sourceforge.net/p/satsumagraph/code/ci/master/tree/'>Browse code</a>
+
 - \ref p_installation
 - \ref p_tutorial
 - \ref p_troubleshooting
