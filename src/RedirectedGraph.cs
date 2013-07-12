@@ -36,10 +36,12 @@ namespace Satsuma
 	{
 		public enum Direction
 		{
-
-			Forward, ///< The arc should be directed from U to V.
-			Backward, ///< The arc should be directed from V to U.
-			Edge ///< The arc should be undirected.
+			/// The arc should be directed from U to V.
+			Forward,
+			/// The arc should be directed from V to U.
+			Backward,
+			/// The arc should be undirected.
+			Edge
 		}
 
 		private IGraph graph;

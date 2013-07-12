@@ -218,10 +218,14 @@ namespace Satsuma
 	/// Allows filtering arcs. Can be passed to functions which return a collection of arcs.
 	public enum ArcFilter
 	{
-		All, ///< All arcs.
-		Edge, ///< Only undirected arcs.
-		Forward, ///< Only edges, or directed arcs from the first point (to the second point, if any)
-		Backward ///< Only edges, or directed arcs to the first point (from the second point, if any)
+		/// All arcs.
+		All,
+		/// Only undirected arcs.
+		Edge,
+		/// Only edges, or directed arcs from the first point (to the second point, if any).
+		Forward,
+		/// Only edges, or directed arcs to the first point (from the second point, if any).
+		Backward
 	}
 
 	/// Interface to a read-only graph.

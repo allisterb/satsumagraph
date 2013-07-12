@@ -41,7 +41,7 @@ namespace Satsuma
 	/// Example (finding a shortest path between two nodes):
 	/// \code{.cs}
 	/// var g = new CompleteGraph(50);
-	/// var pos = new Dictionary<Node, double>();
+	/// var pos = new Dictionary&lt;Node, double&gt;();
 	/// var r = new Random();
 	/// foreach (var node in g.Nodes())
 	/// 	pos[node] = r.NextDouble();
@@ -55,6 +55,7 @@ namespace Satsuma
 	/// \sa BellmanFord, Bfs, Dijkstra
 	public sealed class AStar
 	{
+		/// The input graph.
 		public IGraph Graph { get; private set; }
 		/// A non-negative cost function.
 		public Func<Arc, double> Cost { get; private set; }
@@ -63,7 +64,7 @@ namespace Satsuma
 		/// - <b>non-negative</b>,
 		/// - \b admissible: it must assign for each node a <b>lower bound</b> on the
 		/// cost of the cheapest path from the given node to the target node set,
-		/// - and \b consistent: for each \e uv arc, <tt>Heuristic(u) &le; Cost(uv) + Heuristic(v)</tt>.
+		/// - and \b consistent: for each \e uv arc, <tt>Heuristic(u) &lt;= Cost(uv) + Heuristic(v)</tt>.
 		///
 		/// From the above it follows that #Heuristic must return 0 for all target nodes.
 		///
@@ -82,7 +83,7 @@ namespace Satsuma
 			Cost = cost;
 			Heuristic = heuristic;
 
-			dijkstra = new Dijkstra(Graph, Dijkstra.ModeType.Sum, 
+			dijkstra = new Dijkstra(Graph, DijkstraMode.Sum, 
 				arc => Cost(arc) - Heuristic(Graph.U(arc)) + Heuristic(Graph.V(arc)));
 		}
 

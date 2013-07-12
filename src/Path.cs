@@ -303,8 +303,10 @@ namespace Satsuma
 
 		public enum Topology
 		{
-			Path, ///< The graph is a path.
-			Cycle ///< The graph is a cycle.
+			/// The graph is a path.
+			Path,
+			/// The graph is a cycle.
+			Cycle
 		}
 
 		public PathGraph(int nodeCount, Topology topology, Directedness directedness)

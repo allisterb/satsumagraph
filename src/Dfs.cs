@@ -33,9 +33,12 @@ namespace Satsuma
 	{
 		public enum Direction
 		{
-			Undirected, ///< The Dfs treats each arc as bidirectional.
-			Forward, ///< The Dfs respects the orientation of each arc.
-			Backward ///< The Dfs runs on the reverse graph.
+			/// The Dfs treats each arc as bidirectional.
+			Undirected,
+			/// The Dfs respects the orientation of each arc.
+			Forward,
+			/// The Dfs runs on the reverse graph.
+			Backward
 		}
 
 		protected IGraph Graph { get; private set; }

@@ -32,7 +32,7 @@ namespace Satsuma
 	/// Example:
 	/// \code
 	/// var g = new CustomGraph();
-	/// for (int i = 0; i < 5; i++) g.AddNode();
+	/// for (int i = 0; i &lt; 5; i++) g.AddNode();
 	/// var components = new ConnectedComponents(g, ConnectedComponents.Flags.CreateComponents);
 	/// Console.WriteLine("Number of components: " + components.Count); // should print 5
 	/// Console.WriteLine("Components:");
@@ -45,7 +45,8 @@ namespace Satsuma
 		public enum Flags
 		{
 			None = 0,
-			CreateComponents = 1 << 0 ///< If set, #Components will contain the connected components.
+			/// If set, #Components will contain the connected components.
+			CreateComponents = 1 << 0
 		}
 
 		/// The input graph.
@@ -105,8 +106,10 @@ namespace Satsuma
 		public enum Flags
 		{
 			None = 0,
-			CreateRedNodes = 1 << 0, ///< If set, #RedNodes will contain the red nodes if the graph is bipartite.
-			CreateBlueNodes = 1 << 1 ///< If set, #BlueNodes will contain the blue nodes if the graph is bipartite.
+			/// If set, #RedNodes will contain the red nodes if the graph is bipartite.
+			CreateRedNodes = 1 << 0,
+			/// If set, #BlueNodes will contain the blue nodes if the graph is bipartite.
+			CreateBlueNodes = 1 << 1
 		}
 
 		/// The input graph.
@@ -174,7 +177,8 @@ namespace Satsuma
 		public enum Flags
 		{
 			None = 0,
-			CreateOrder = 1 << 0 ///< If set, #Order will contain a topological order of the nodes.
+			/// If set, #Order will contain a topological order of the nodes.
+			CreateOrder = 1 << 0 
 		}
 
 		/// The input graph.
@@ -252,7 +256,8 @@ namespace Satsuma
 		public enum Flags
 		{
 			None = 0,
-			CreateComponents = 1 << 0 ///< If set, #Components will contain the strongly connected components.
+			/// If set, #Components will contain the strongly connected components.
+			CreateComponents = 1 << 0
 		}
 
 		/// The input digraph.
@@ -404,8 +409,10 @@ namespace Satsuma
 		public enum Flags
 		{
 			None = 0,
-			CreateComponents = 1 << 0, ///< If set, #Components will contain the 2-edge-connected components.
-			CreateBridges = 1 << 1 ///< If set, #Bridges will contain the bridges.
+			/// If set, #Components will contain the 2-edge-connected components.
+			CreateComponents = 1 << 0,
+			/// If set, #Bridges will contain the bridges.
+			CreateBridges = 1 << 1 
 		}
 
 		/// The input graph.
@@ -444,8 +451,10 @@ namespace Satsuma
 		public enum Flags
 		{
 			None = 0,
-			CreateComponents = 1 << 0, ///< If set, #Components will contain the 2-edge-connected components.
-			CreateCutvertices = 1 << 1 ///< If set, #Cutvertices will contain information about the cutvertices.
+			/// If set, #Components will contain the 2-edge-connected components.
+			CreateComponents = 1 << 0,
+			/// If set, #Cutvertices will contain information about the cutvertices.
+			CreateCutvertices = 1 << 1
 		}
 
 		/// The input graph.
@@ -457,7 +466,7 @@ namespace Satsuma
 		public List<HashSet<Node>> Components { get; private set; }
 		/// Stores the increase in the number of connected components upon deleting a node.
 		/// Null if Flags.CreateCutvertices was not set during construction.
-		/// The only keys are cutvertices (value \> 0) and one-node components (value = -1).
+		/// The only keys are cutvertices (value &gt; 0) and one-node components (value = -1).
 		/// Other nodes are not contained as keys, as they would all have 0 value assigned.
 		public Dictionary<Node, int> Cutvertices { get; private set; }
 

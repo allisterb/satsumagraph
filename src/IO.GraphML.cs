@@ -229,7 +229,6 @@ namespace Satsuma.IO.GraphML
 	}
 
 	/// Represents a standard GraphML property (attribute), which may assign primitive values to objects.
-	/// \tparam T Must be one of the types corresponding to the values of StandardType.
 	///
 	/// Example (assigning string values to nodes):
 	/// \code
@@ -238,7 +237,7 @@ namespace Satsuma.IO.GraphML
 	/// GraphML.GraphMLFormat f = new GraphML.GraphMLFormat();
 	/// var g = new CompleteGraph(4);
 	/// f.Graph = g;
-	/// var color = new GraphML.StandardProperty<string>()
+	/// var color = new GraphML.StandardProperty&lt;string&gt;
 	///		{ Name = "color", Domain = GraphML.PropertyDomain.Node,
 	///		  HasDefaultValue = true, DefaultValue = "black" };
 	/// color.Values[g.GetNode(0)] = "red";
@@ -248,6 +247,8 @@ namespace Satsuma.IO.GraphML
 	/// f.Properties.Add(color);
 	/// f.Save(@"c:\my_little_graph.graphml");
 	/// \endcode
+	///
+	/// \tparam T Must be one of the types corresponding to the values of StandardType.
 	public sealed class StandardProperty<T> : DictionaryProperty<T>
 	{
 		/// The type parameter of this property.
@@ -339,11 +340,16 @@ namespace Satsuma.IO.GraphML
 	/// \sa NodeGraphicsProperty
 	public sealed class NodeGraphics
 	{
-		public double X { get; set; } ///< The \e X coordinate of the center of shape representing the node.
-		public double Y { get; set; } ///< The \e Y coordinate of the center of shape representing the node.
-		public double Width { get; set; } ///< The \e width of the shape representing the node.
-		public double Height { get; set; } ///< The \e height of the shape representing the node.
-		public NodeShape Shape { get; set; } ///< The \e shape of the node.
+		/// The \e X coordinate of the center of shape representing the node.
+		public double X { get; set; }
+		/// The \e Y coordinate of the center of shape representing the node.
+		public double Y { get; set; }
+		/// The \e width of the shape representing the node.
+		public double Width { get; set; }
+		/// The \e height of the shape representing the node.
+		public double Height { get; set; }
+		/// The \e shape of the node.
+		public NodeShape Shape { get; set; }
 
 		public NodeGraphics()
 		{
@@ -474,7 +480,7 @@ namespace Satsuma.IO.GraphML
 	/// var g = f.Graph;
 	/// // retrieve the property defining the appearance of the nodes
 	/// GraphML.NodeGraphicsProperty ngProp = (GraphML.NodeGraphicsProperty)
-	/// 	f.Properties.FirstOrDefault(x => x is GraphML.NodeGraphicsProperty);
+	/// 	f.Properties.FirstOrDefault(x =&gt; x is GraphML.NodeGraphicsProperty);
 	/// foreach (var node in g.Nodes())
 	/// {
 	/// 	GraphML.NodeGraphics ng = null;
@@ -484,14 +490,14 @@ namespace Satsuma.IO.GraphML
 	/// 	else Console.WriteLine(string.Format("X={0};Y={1}", ng.X, ng.Y));
 	/// }
 	/// // retrieve some user-defined property defining weights for arcs
-	/// GraphML.StandardProperty<double> weights = (GraphML.StandardProperty<double>)
-	///		f.Properties.FirstOrDefault(x => x.Name == "weight" && 
-	///			(x.Domain == GraphML.PropertyDomain.All || x.Domain == GraphML.PropertyDomain.Arc) &&
-	///			x is GraphML.StandardProperty<double>);
+	/// GraphML.StandardProperty&lt;double&gt; weights = (GraphML.StandardProperty&lt;double&gt;)
+	///		f.Properties.FirstOrDefault(x =&gt; x.Name == "weight" &amp;&amp; 
+	///			(x.Domain == GraphML.PropertyDomain.All || x.Domain == GraphML.PropertyDomain.Arc) &amp;&amp;
+	///			x is GraphML.StandardProperty&lt;double&gt;);
 	/// foreach (var arc in g.Arcs())
 	/// {
 	///		double weight = 0;
-	///		bool hasWeight = (weights != null && weights.TryGetValue(arc, out weight));
+	///		bool hasWeight = (weights != null &amp;&amp; weights.TryGetValue(arc, out weight));
 	///		Console.WriteLine("Arc "+arc+": weight is "+(hasWeight ? weight.ToString() : "undefined"));
 	/// }
 	/// \endcode
@@ -504,7 +510,7 @@ namespace Satsuma.IO.GraphML
 	/// \endcode
 	///
 	/// For examples on saving extra values for nodes, arcs or the graph itself;
-	/// see the descendants of GraphMLProperty, such as StandardProperty<T> and NodeGraphicsProperty.
+	/// see the descendants of GraphMLProperty, such as StandardProperty&lt;T&gt; and NodeGraphicsProperty.
 	public sealed class GraphMLFormat
 	{
 		internal static readonly XNamespace xmlns = "http://graphml.graphdrawing.org/xmlns";
@@ -540,7 +546,7 @@ namespace Satsuma.IO.GraphML
 		}
 
 		/// Registers a new GraphML property loader.
-		/// By default, recognition of StandardProperty<T> and NodeGraphicsProperty is supported when loading.
+		/// By default, recognition of StandardProperty&lt;T&gt; and NodeGraphicsProperty is supported when loading.
 		/// You can define your own property classes by calling this method to add a \e loader.
 		///
 		/// The loader chain is used to make properties from <tt>&lt;key&gt;</tt> elements.

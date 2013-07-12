@@ -29,7 +29,7 @@ using System.Linq;
 namespace Satsuma
 {
 	/// Finds a minimum cost spanning forest in a graph using Prim's algorithm.
-	/// Most suitable for dense graphs. For sparse (i.e. everyday) graphs, use Kruskal<TCost>.
+	/// Most suitable for dense graphs. For sparse (i.e. everyday) graphs, use Kruskal&lt;TCost&gt;.
 	///
 	/// Running time: O((m+n) log n), memory usage: O(n); 
 	/// where \e n is the number of nodes and \e m is the number of arcs.
@@ -40,9 +40,9 @@ namespace Satsuma
 	/// Node u = g.GetNode(0);
 	/// Node v = g.GetNode(1);
 	/// Node w = g.GetNode(2);
-	/// HashSet<Arc> expensiveArcs = new HashSet<Arc>() { g.GetArc(u, v), g.GetArc(v, w) };
-	/// Func<Arc, double> cost = (arc => expensiveArcs.Contains(arc) ? 1.5 : 1.0);
-	/// Prim<double> p = new Prim<double>(g, cost);
+	/// var expensiveArcs = new HashSet&lt;Arc&gt;() { g.GetArc(u, v), g.GetArc(v, w) };
+	/// Func&lt;Arc, double&gt; cost = (arc => expensiveArcs.Contains(arc) ? 1.5 : 1.0);
+	/// var p = new Prim&lt;double&gt;(g, cost);
 	/// // the graph is connected, so the spanning forest is a tree
 	/// Console.WriteLine("Total cost of a minimum cost spanning tree: "+p.Forest.Sum(cost));
 	/// Console.WriteLine("A minimum cost spanning tree:");
@@ -50,7 +50,7 @@ namespace Satsuma
 	/// \endcode
 	///
 	/// \note The graph in the example is a complete graph, which is dense.
-	/// That's why we have used Prim<TCost> instead of Kruskal<TCost>.
+	/// That's why we have used Prim&lt;TCost&gt; instead of Kruskal&lt;TCost&gt;.
 	/// \tparam TCost The arc cost type.
 	public sealed class Prim<TCost>
 		where TCost : IComparable<TCost>
@@ -116,7 +116,7 @@ namespace Satsuma
 	}
 
 	/// Finds a minimum cost spanning forest in a graph using Kruskal's algorithm.
-	/// Most suitable for sparse (i.e. everyday) graphs. For dense graphs, use Prim<TCost>.
+	/// Most suitable for sparse (i.e. everyday) graphs. For dense graphs, use Prim&lt;TCost&gt;.
 	///
 	/// The algorithm starts with an empty forest, and gradually expands it with one arc at a time,
 	/// taking the cheapest possible arc in each step.
@@ -134,7 +134,7 @@ namespace Satsuma
 	/// and arbitrary arcs can be added to the forest at any time using \c AddArc.
 	/// However, if using these features, the resulting forest may not be optimal.
 	///
-	/// See Prim<TCost> for a usage example.
+	/// See Prim&lt;TCost&gt; for a usage example.
 	/// \tparam TCost The arc cost type.
 	public sealed class Kruskal<TCost>
 		where TCost : IComparable<TCost>

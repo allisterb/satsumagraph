@@ -6,8 +6,21 @@ using System.Threading.Tasks;
 
 namespace Satsuma
 {
+	/// The path cost calculation mode for Dijkstra's algorithm.
+	public enum DijkstraMode
+	{
+		/// The cost of a path equals to the sum of the costs of its arcs.
+		/// This is the default mode.
+		/// \warning In this mode, Dijkstra.Cost must be nonnegative. 
+		Sum,
+
+		/// The cost of a path equals to the maximum of the costs of its arcs.
+		/// In this mode, Dijkstra.Cost can be arbitrary.
+		Maximum
+	}
+
 	/// Uses %Dijkstra's algorithm to find cheapest paths in a graph.
-	/// \warning See #ModeType for constraints on the cost function.
+	/// \warning See DijkstraMode for constraints on the cost function.
 	/// 
 	/// Usage:
 	/// - #AddSource can be used to initialize the class by providing the source nodes.
@@ -25,7 +38,7 @@ namespace Satsuma
 	/// Example (finding a shortest path between two nodes):
 	/// \code{.cs}
 	/// var g = new CompleteGraph(50);
-	/// var pos = new Dictionary<Node, double>();
+	/// var pos = new Dictionary&lt;Node, double&gt;();
 	/// var r = new Random();
 	/// foreach (var node in g.Nodes())
 	/// 	pos[node] = r.NextDouble();
@@ -38,30 +51,18 @@ namespace Satsuma
 	/// \sa AStar, BellmanFord, Bfs
 	public sealed class Dijkstra
 	{
-		public enum ModeType
-		{
-			/// The cost of a path equals to the sum of the costs of its arcs.
-			/// This is the default mode.
-			/// \warning In this mode, #Cost must be nonnegative. 
-			Sum,
-
-			/// The cost of a path equals to the maximum of the costs of its arcs.
-			/// In this mode, #Cost can be arbitrary.
-			Maximum
-		}
-
 		/// The input graph.
 		public IGraph Graph { get; private set; }
 		/// The arc cost function.
 		/// <tt>double.PositiveInfinity</tt> means that an arc is impassable.
-		/// See #ModeType for restrictions on cost functions.
+		/// See DijkstraMode for restrictions on cost functions.
 		public Func<Arc, double> Cost { get; private set; }
 
 		/// The path cost calculation mode.
-		public ModeType Mode { get; private set; }
+		public DijkstraMode Mode { get; private set; }
 		/// The lowest possible cost value.
-		/// - \c 0 if <tt>#ModeType == ModeType.Sum</tt>
-		/// - \c double.NegativeInfinity if <tt>#ModeType == ModeType.Maximum</tt>
+		/// - \c 0 if <tt>#Mode == DijkstraMode.Sum</tt>
+		/// - \c double.NegativeInfinity if <tt>#Mode == DijkstraMode.Maximum</tt>
 		public double NullCost { get; private set; }
 
 		private readonly Dictionary<Node, double> distance;
@@ -71,12 +72,12 @@ namespace Satsuma
 		/// \param graph See #Graph.
 		/// \param mode See #Mode.
 		/// \param cost See #Cost.
-		public Dijkstra(IGraph graph, ModeType mode, Func<Arc, double> cost)
+		public Dijkstra(IGraph graph, DijkstraMode mode, Func<Arc, double> cost)
 		{
 			Graph = graph;
 			Cost = cost;
 			Mode = mode;
-			NullCost = (mode == ModeType.Sum ? 0 : double.NegativeInfinity);
+			NullCost = (mode == DijkstraMode.Sum ? 0 : double.NegativeInfinity);
 
 			distance = new Dictionary<Node, double>();
 			parentArc = new Dictionary<Node, Arc>();
@@ -85,7 +86,7 @@ namespace Satsuma
 
 		private void ValidateCost(double c)
 		{
-			if (Mode == ModeType.Sum && c < 0)
+			if (Mode == DijkstraMode.Sum && c < 0)
 				throw new InvalidOperationException("Invalid cost: " + c);
 		}
 
@@ -99,7 +100,7 @@ namespace Satsuma
 		/// Adds a new source node and sets its initial distance to \e nodeCost.
 		/// Use this method only if you know what you are doing.
 		/// \note Equivalent to deleting all arcs entering \e node,
-		/// and adding a new source node \s with a new arc from \e s to \e node whose cost equals to \e nodeCost.
+		/// and adding a new source node \e s with a new arc from \e s to \e node whose cost equals to \e nodeCost.
 		/// \exception InvalidOperationException
 		/// The node has already been reached, or \e nodeCost is invalid as an arc cost.
 		public void AddSource(Node node, double nodeCost)
@@ -134,7 +135,7 @@ namespace Satsuma
 
 				double arcCost = Cost(arc);
 				ValidateCost(arcCost);
-				double newDist = (Mode == ModeType.Sum ? minDist + arcCost : Math.Max(minDist, arcCost));
+				double newDist = (Mode == DijkstraMode.Sum ? minDist + arcCost : Math.Max(minDist, arcCost));
 
 				double oldDist;
 				if (!priorityQueue.TryGetPriority(other, out oldDist)) oldDist = double.PositiveInfinity;

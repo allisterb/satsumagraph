@@ -55,7 +55,7 @@ namespace Satsuma
 
 	/// Finds a maximum flow using the Goldberg-Tarjan preflow algorithm.
 	/// Let \e D denote the sum of capacities for all arcs exiting Source.
-	/// If all capacities are integers, and D \< 2^53, then the returned flow is exact and optimal.
+	/// If all capacities are integers, and D &lt; 2^53, then the returned flow is exact and optimal.
 	/// Otherwise, an almost-optimal flow is returned.
 	/// \sa IntegerPreflow, NetworkSimplex
 	public sealed class Preflow : IFlow<double>
@@ -83,7 +83,7 @@ namespace Satsuma
 			flow = new Dictionary<Arc, double>();
 
 			// calculate bottleneck capacity to get an upper bound for the flow value
-			Dijkstra dijkstra = new Dijkstra(Graph, Dijkstra.ModeType.Maximum, a => -Capacity(a));
+			Dijkstra dijkstra = new Dijkstra(Graph, DijkstraMode.Maximum, a => -Capacity(a));
 			dijkstra.AddSource(Source);
 			dijkstra.RunUntilFixed(Target);
 			double bottleneckCapacity = -dijkstra.GetDistance(Target);

@@ -128,7 +128,7 @@ namespace Satsuma
 		}
 
 		/// Runs the algorithm until a node satisfying the given condition is reached.
-		/// \return a target node if one was successfully reached, or Node.Invalid if it is unreachable.
+		/// \return A target node if one was successfully reached, or Node.Invalid if it is unreachable.
 		public Node RunUntilReached(Func<Node, bool> isTarget)
 		{
 			Node reachedTargetNode = ReachedNodes.FirstOrDefault(isTarget);

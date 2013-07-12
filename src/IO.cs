@@ -56,8 +56,8 @@ namespace Satsuma.IO
 	/// Node[] nodes = loader.Load(@"c:\graph.txt", Directedness.Directed);
 	/// // retrieve the loaded data
 	/// IGraph graph = loader.Graph;
-	/// Dictionary<Arc, string> arcNames = loader.Extensions[0];
-	/// Dictionary<Arc, double> arcCosts = 
+	/// Dictionary&lt;Arc, string&gt; arcNames = loader.Extensions[0];
+	/// Dictionary&lt;Arc, double&gt; arcCosts = 
 	///		loader.Extensions[1].ToDictionary(kv => kv.Key, kv => double.Parse(kv.Value, CultureInfo.InvariantCulture));
 	/// \endcode
     public sealed class SimpleGraphFormat

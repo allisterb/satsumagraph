@@ -131,7 +131,7 @@ namespace Satsuma
 		}
 	}
 
-	/// The operation mode of InsertionTsp<TNode>.
+	/// The operation mode of InsertionTsp&lt;TNode&gt;.
 	public enum TspSelectionRule
 	{
 		/// The node nearest to the current tour is selected for insertion.
@@ -163,7 +163,7 @@ namespace Satsuma
 		private PriorityQueue<TNode, double> insertableNodeQueue;
 
 		// \copydoc ITsp<TNode>.Tour TODO this does not work in doxygen yet
-		/// See ITsp<TNode>.Tour.
+		/// See ITsp&lt;TNode&gt;.Tour.
 		/// \note The current tour contains only a subset of the nodes in the middle of the execution of the algorithm, 
 		/// since the insertion TSP algorithm works by gradually extending a small tour.
 		public IEnumerable<TNode> Tour { get { return tour; } }
@@ -269,7 +269,7 @@ namespace Satsuma
 	}
 
 	/// Improves a solution for the \ref p_tsp "traveling salesman problem" by using the 2-OPT method.
-	/// It starts from a precomputed tour (e.g. one returned by InsertionTsp<TNode>) and gradually improves it by 
+	/// It starts from a precomputed tour (e.g. one returned by InsertionTsp&lt;TNode&gt;) and gradually improves it by 
 	/// repeatedly swapping two edges.
 	/// It is advised to use this class for symmetric cost functions only.
 	/// \tparam TNode The node type.
