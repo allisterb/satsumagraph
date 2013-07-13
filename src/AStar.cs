@@ -74,9 +74,9 @@ namespace Satsuma
 
 		private Dijkstra dijkstra;
 
-		/// \param graph See the #Graph property.
-		/// \param cost See the #Cost property.
-		/// \param heuristic See the #Heuristic property.
+		/// \param graph See #Graph.
+		/// \param cost See #Cost.
+		/// \param heuristic See #Heuristic.
 		public AStar(IGraph graph, Func<Arc, double> cost, Func<Node, double> heuristic)
 		{
 			Graph = graph;

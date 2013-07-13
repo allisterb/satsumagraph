@@ -69,9 +69,9 @@ namespace Satsuma
 		private readonly Dictionary<Node, Arc> parentArc;
 		private readonly PriorityQueue<Node, double> priorityQueue;
 
-		/// \param graph See the #Graph property.
-		/// \param cost See the #Cost property.
-		/// \param mode See the #Mode property.
+		/// \param graph See #Graph.
+		/// \param cost See #Cost.
+		/// \param mode See #Mode.
 		public Dijkstra(IGraph graph, Func<Arc, double> cost, DijkstraMode mode)
 		{
 			Graph = graph;
