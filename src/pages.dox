@@ -23,8 +23,8 @@ Satsuma is released under the \ref p_license "zlib license". This license is ver
 
 There are two ways for using Satsuma:
 
-- <b>Dynamic linking</b>: This is maybe the easier way. Satsuma comes with a precompiled binary assembly (\c .dll) file under the \c bin folder. You need to add a reference to this \c .dll in your project in order to use Satsuma classes.
-- <b>Static linking</b>: Another way is to link Satsuma statically into your project by adding all the source files to your project. This way, Satsuma will be compiled into your program.
+- <b>Dynamic linking</b>: This is maybe the easier way. Satsuma comes with precompiled binary assemblies (\c .dll files) under the \c bin folder. You need to add a reference to \c bin\\Release\\Satsuma.dll in your project in order to use Satsuma classes.
+- <b>Static linking</b>: Another way (not recommended) is to link Satsuma statically into your project by adding all the \c .cs source files to your project. This way, Satsuma will be compiled into your program.
 
 \page p_tutorial Tutorial
 
