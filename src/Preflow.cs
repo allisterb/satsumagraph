@@ -83,7 +83,7 @@ namespace Satsuma
 			flow = new Dictionary<Arc, double>();
 
 			// calculate bottleneck capacity to get an upper bound for the flow value
-			Dijkstra dijkstra = new Dijkstra(Graph, DijkstraMode.Maximum, a => -Capacity(a));
+			Dijkstra dijkstra = new Dijkstra(Graph, a => -Capacity(a), DijkstraMode.Maximum);
 			dijkstra.AddSource(Source);
 			dijkstra.RunUntilFixed(Target);
 			double bottleneckCapacity = -dijkstra.GetDistance(Target);

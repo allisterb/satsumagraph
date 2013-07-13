@@ -34,7 +34,8 @@ namespace Satsuma
 		/// \note Nodes belonging to different graph objects may have the same Id.
 		public long Id { get; private set; }
 
-        public Node(long id) 
+		/// Creates a Node which has the supplied id.
+		public Node(long id) 
 			: this()
         {
             Id = id;
@@ -89,6 +90,7 @@ namespace Satsuma
 		/// \note Arcs belonging to different graph objects may have the same Id.
 		public long Id { get; private set; }
 
+		/// Creates an Arc which has the supplied id.
 		public Arc(long id)
 			: this()
 		{

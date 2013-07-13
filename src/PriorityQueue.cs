@@ -35,7 +35,7 @@ namespace Satsuma
 		int Count { get; }
 		/// Returns all the element-priority pairs.
 		IEnumerable<KeyValuePair<TElement, TPriority>> Items { get; }
-		/// \return \c true if the specified element is in the priority queue.
+		/// Returns whether the specified element is in the priority queue.
 		bool Contains(TElement element);
 		/// Gets the priority of an element without throwing an exception.
 		/// \param priority Becomes \c default(P) if the element is not in the queue,

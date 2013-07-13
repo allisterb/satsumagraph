@@ -42,7 +42,7 @@ namespace Satsuma
 	/// var r = new Random();
 	/// foreach (var node in g.Nodes())
 	/// 	pos[node] = r.NextDouble();
-	/// var dijkstra = new Dijkstra(g, arc => Math.Abs(pos[g.U(arc)] - pos[g.V(arc)]));
+	/// var dijkstra = new Dijkstra(g, arc =&gt; Math.Abs(pos[g.U(arc)] - pos[g.V(arc)]), DijkstraMode.Sum);
 	/// Node a = g.GetNode(0), b = g.GetNode(1);
 	/// dijkstra.AddSource(a);
 	/// dijkstra.RunUntilFixed(b);
@@ -69,10 +69,10 @@ namespace Satsuma
 		private readonly Dictionary<Node, Arc> parentArc;
 		private readonly PriorityQueue<Node, double> priorityQueue;
 
-		/// \param graph See #Graph.
-		/// \param mode See #Mode.
-		/// \param cost See #Cost.
-		public Dijkstra(IGraph graph, DijkstraMode mode, Func<Arc, double> cost)
+		/// \param graph See the #Graph property.
+		/// \param cost See the #Cost property.
+		/// \param mode See the #Mode property.
+		public Dijkstra(IGraph graph, Func<Arc, double> cost, DijkstraMode mode)
 		{
 			Graph = graph;
 			Cost = cost;

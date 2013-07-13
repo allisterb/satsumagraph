@@ -57,7 +57,7 @@ namespace Satsuma
 	{
 		/// The input graph.
 		public IGraph Graph { get; private set; }
-		/// A non-negative cost function.
+		/// A non-negative arc cost function.
 		public Func<Arc, double> Cost { get; private set; }
 		/// The A* heuristic function.
 		/// #Heuristic \b must be a function that is
@@ -74,17 +74,17 @@ namespace Satsuma
 
 		private Dijkstra dijkstra;
 
-		/// \param graph See #Graph.
-		/// \param cost See #Cost.
-		/// \param heuristic See #Heuristic.
+		/// \param graph See the #Graph property.
+		/// \param cost See the #Cost property.
+		/// \param heuristic See the #Heuristic property.
 		public AStar(IGraph graph, Func<Arc, double> cost, Func<Node, double> heuristic)
 		{
 			Graph = graph;
 			Cost = cost;
 			Heuristic = heuristic;
 
-			dijkstra = new Dijkstra(Graph, DijkstraMode.Sum, 
-				arc => Cost(arc) - Heuristic(Graph.U(arc)) + Heuristic(Graph.V(arc)));
+			dijkstra = new Dijkstra(Graph, arc => Cost(arc) - Heuristic(Graph.U(arc)) + Heuristic(Graph.V(arc)),
+				DijkstraMode.Sum);
 		}
 
 		private Node CheckTarget(Node node)
