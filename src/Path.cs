@@ -202,7 +202,7 @@ namespace Satsuma
 		}
 
 		/// Reverses the path in O(1) time.
-		/// For example, the \b u &mdash; \b v &rarr; \b w path becomes the \b w &larr; \b v &mdash; \b u path.
+		/// For example, the \b u — \b v → \b w path becomes the \b w ← \b v — \b u path.
 		public void Reverse()
 		{
 			{ var tmp = FirstNode; FirstNode = LastNode; LastNode = tmp; }
