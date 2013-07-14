@@ -41,7 +41,7 @@ namespace Satsuma
 	/// Extension methods to IPath.
 	public static class PathExtensions
 	{
-		/// Returns \c true if #FirstNode equals #LastNode and the path has at least one arc.
+		/// Returns \c true if FirstNode equals LastNode and the path has at least one arc.
 		public static bool IsCycle(this IPath path)
 		{
 			return path.FirstNode == path.LastNode && path.ArcCount() > 0;
@@ -91,6 +91,20 @@ namespace Satsuma
 	/// The Node and Arc set of the adaptor is a subset of that of the original graph.
 	/// The underlying graph can be modified while using this adaptor,
 	/// as long as no path nodes and path arcs are deleted.
+	///
+	/// Example (building a path):
+	/// \code
+	/// var g = new CompleteGraph(15);
+	/// var p = new Path(g);
+	/// var u = g.GetNode(0), v = g.GetNode(1), w = g.GetNode(2);
+	/// p.Begin(u);
+	/// p.AddLast(g.GetArc(u, v));
+	/// p.AddFirst(g.GetArc(w, u));
+	/// // now we have the w--u--v path
+	/// p.Reverse();
+	/// // now we have the v--u--w path
+	/// \endcode
+	///
 	/// \sa PathGraph
 	public sealed class Path : IPath, IClearable
 	{
@@ -188,7 +202,7 @@ namespace Satsuma
 		}
 
 		/// Reverses the path in O(1) time.
-		/// \note The direction of the path arcs will not be reversed, only their order.
+		/// For example, the \b u &mdash; \b v &rarr; \b w path becomes the \b w &larr; \b v &mdash; \b u path.
 		public void Reverse()
 		{
 			{ var tmp = FirstNode; FirstNode = LastNode; LastNode = tmp; }
