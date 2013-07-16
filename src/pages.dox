@@ -30,7 +30,9 @@ There are two ways for using Satsuma:
 
 \section p_tutorial_intro Introduction
 
-All graphs are \b mixed in Satsuma, which means that a graph can contain directed and undirected arcs at once. In short, there is no distinction between directed and undirected graphs. An undirected arc is called an \b edge. Loops and multiple arcs are allowed, of course.
+- Graphs consist of \b nodes connected with \b arcs.
+- All graphs are \b mixed in Satsuma, which means that a graph can contain \b directed and \b undirected arcs at once. In short, there is no distinction between directed and undirected graphs. Loops and multiple arcs are also allowed.
+- An undirected arc is called an \b edge.
 
 Graphs can be accessed in a read-only way through the IGraph interface. The IBuildableGraph and IDestroyableGraph interfaces provide write access to a graph.
 
@@ -41,9 +43,9 @@ The structs Node and Arc represent the nodes and arcs of a graph. Node.Invalid a
 Most of the algorithms can be divided into two categories:
 
 - while there are operations which view the graph as \b undirected and treat all arcs as edges,
-	- e.g. Connectivity.ConnectedComponents, Connectivity.IsBipartite
+	- e.g. ConnectedComponents, Bipartition
 - others view the graph as a \b directed graph and treat edges as bidirectional channels.
-	- e.g. Connectivity.IsAcyclicDigraph, Dijkstra, Preflow
+	- e.g. TopologicalOrder, Dijkstra, Preflow
 
 \section p_tutorial_create Creating graphs
 
@@ -62,16 +64,16 @@ Arc bc = g.AddArc(b, c, Directedness.Undirected);
 
 The above code creates a graph on three nodes, consisting of a directed arc and an edge. As you can see, the CustomGraph class can be used to build a graph.
 
-You can also use some "graph constants". These are predefined graphs which usually consume very little memory, due to their special nature. They are CompleteBipartiteGraph and CompleteGraph. Using them is more efficient than e.g. building a complete graph using CustomGraph.
+You can also use some "graph constants". These are predefined graphs which usually consume very little memory, due to their special nature. They include CompleteBipartiteGraph and CompleteGraph. Using them is more efficient than e.g. building a complete graph using CustomGraph.
 
 Graphs can also be loaded and saved. See the IO.SimpleGraphFormat, IO.LemonGraphFormat and IO.GraphML.GraphMLFormat classes.
 
 \section p_tutorial_process Processing graphs
 
-- To enumerate the elements of a graph, you can call IGraph.Nodes or IGraph.Arcs.
-- You can get the two nodes of an Arc by calling the IArcLookup.U and IArcLookup.V methods of the containing graph.
-- IArcLookup.IsEdge tells you whether an arc is undirected.
-- Use the ArcLookup.ArcToString method to convert an arc to a readable representation.
+- To enumerate the elements of a graph, you can call \ref IGraph.Nodes "Nodes" or \ref IGraph.Arcs "Arcs".
+- You can get the two nodes of an Arc by calling the \ref IArcLookup.U "U" and \ref IArcLookup.V "V" methods of the containing graph.
+- \ref IArcLookup.IsEdge "IsEdge" tells you whether an arc is undirected.
+- Use the \ref ArcLookupExtensions.ArcToString "ArcToString" method to convert an arc to a readable representation.
 
 Example:
 

@@ -55,8 +55,8 @@ namespace Satsuma
 
 	/// Finds a maximum flow using the Goldberg-Tarjan preflow algorithm.
 	/// Let \e D denote the sum of capacities for all arcs exiting Source.
-	/// If all capacities are integers, and D &lt; 2^53, then the returned flow is exact and optimal.
-	/// Otherwise, an almost-optimal flow is returned.
+	/// - If all capacities are integers, and \e D &lt; 2<sup>53</sup>, then the returned flow is exact and optimal.
+	/// - Otherwise, small round-off errors may occur and the returned flow is \"almost-optimal\" (see #Error).
 	/// \sa IntegerPreflow, NetworkSimplex
 	public sealed class Preflow : IFlow<double>
 	{
@@ -70,7 +70,7 @@ namespace Satsuma
 
 		/// A (usually very small) approximate upper bound
 		/// for the difference between #FlowSize and the actual maximum flow value.
-		/// \note Due to floating-point roundoff errors, maximum flow cannot be calculated exactly.
+		/// \note Due to floating-point roundoff errors, the maximum flow cannot be calculated exactly.
 		public double Error { get; private set; }
 
 		public Preflow(IGraph graph, Func<Arc, double> capacity, Node source, Node target)

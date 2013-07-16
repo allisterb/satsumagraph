@@ -149,7 +149,7 @@ namespace Satsuma.Drawing
 		/// The current layout, which assigns positions to the nodes.
 		public Dictionary<Node, PointD> NodePositions { get; private set; }
 		/// The function defining the attraction force between two connected nodes.
-		/// Edges are viewed as springs that want to bring the two connected nodes together.
+		/// Arcs are viewed as springs that want to bring the two connected nodes together.
 		/// The function takes a single parameter, which is the distance of the two nodes.
 		///
 		/// The default force function is 2 <em>ln</em>(d).
