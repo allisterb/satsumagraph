@@ -565,7 +565,7 @@ namespace Satsuma.IO.GraphML
 			{
 				GraphMLProperty p;
 				if (propertyById.TryGetValue(xData.Attribute("key").Value, out p))
-					p.ReadData(x, obj);
+					p.ReadData(xData, obj);
 			}
 		}
 
