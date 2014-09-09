@@ -525,6 +525,13 @@ namespace Satsuma.IO.GraphML
 		///   If null, will be replaced with a new CustomGraph instance.
 		/// - <b>When saving</b>: Can be an arbitrary graph (not null).
 		public IGraph Graph { get; set; }
+		/// Returns a GraphML identifier for each node. May be null.
+		/// - <b>When saving</b>: No two nodes may have the same id.
+		///   Nodes with no id specified will have a generated id.
+		public Dictionary<Node,string> NodeId { get; set; }
+		/// Returns an optional GraphML identifier for each arc. May be null.
+		/// - <b>When saving</b>: Arcs with no id specified will not have any id in the resulting file.
+		public Dictionary<Arc, string> ArcId { get; set; }
 		/// The properties (special data for nodes, arcs and the graph itself).
 		public IList<GraphMLProperty> Properties { get; private set; }
 
@@ -602,14 +609,18 @@ namespace Satsuma.IO.GraphML
 				Directedness.Directed : Directedness.Undirected);
 			ReadProperties(propertyById, xGraph, Graph);
 			// load nodes
+			NodeId = new Dictionary<Node, string>();
 			Dictionary<string, Node> nodeById = new Dictionary<string, Node>();
 			foreach (var xNode in Utils.ElementsLocal(xGraph, "node"))
 			{
 				Node node = buildableGraph.AddNode();
-				nodeById[xNode.Attribute("id").Value] = node;
+				string id = xNode.Attribute("id").Value;
+				NodeId[node] = id;
+				nodeById[id] = node;
 				ReadProperties(propertyById, xNode, node);
 			}
 			// load arcs
+			ArcId = new Dictionary<Arc, string>();
 			foreach (var xArc in Utils.ElementsLocal(xGraph, "edge"))
 			{
 				Node u = nodeById[xArc.Attribute("source").Value];
@@ -620,6 +631,9 @@ namespace Satsuma.IO.GraphML
 				if (dirAttr != null) dir = (dirAttr.Value == "true" ? Directedness.Directed : Directedness.Undirected);
 				
 				Arc arc = buildableGraph.AddArc(u, v, dir);
+				XAttribute xId = xArc.Attribute("id");
+				if (xId != null)
+					ArcId[arc] = xId.Value;
 				ReadProperties(propertyById, xArc, arc);
 			}
 		}
@@ -682,23 +696,52 @@ namespace Satsuma.IO.GraphML
 			xml.WriteAttributeString("parse.edges", Graph.ArcCount().ToString(CultureInfo.InvariantCulture));
 			xml.WriteAttributeString("parse.order", "nodesfirst");
 			DefinePropertyValues(xml, Graph);
+
+			Dictionary<string, Node> nodeById = new Dictionary<string, Node>();
+			if (NodeId == null)
+				NodeId = new Dictionary<Node,string>();
+			foreach (var kv in NodeId)
+			{
+				if (nodeById.ContainsKey(kv.Value))
+					throw new Exception("Duplicate node id " + kv.Value);
+				nodeById[kv.Value] = kv.Key;
+			}
 			foreach (var node in Graph.Nodes())
 			{
+				string id;
+				NodeId.TryGetValue(node, out id);
+				if (id == null)
+				{
+					id = node.Id.ToString(CultureInfo.InvariantCulture);
+					while (nodeById.ContainsKey(id))
+						id += '_';
+					NodeId[node] = id;
+					nodeById[id] = node;
+				}
+
 				xml.WriteStartElement("node", xmlns.NamespaceName);
-				xml.WriteAttributeString("id", node.Id.ToString(CultureInfo.InvariantCulture));
+				xml.WriteAttributeString("id", id);
 				DefinePropertyValues(xml, node);
 				xml.WriteEndElement(); // node
 			}
+
 			foreach (var arc in Graph.Arcs())
 			{
+				string id;
+				if (ArcId != null)
+					ArcId.TryGetValue(arc, out id);
+				else
+					id = null;
+				
 				xml.WriteStartElement("edge", xmlns.NamespaceName);
-				xml.WriteAttributeString("id", arc.Id.ToString(CultureInfo.InvariantCulture));
+				if (id != null) xml.WriteAttributeString("id", id);
 				if (Graph.IsEdge(arc)) xml.WriteAttributeString("directed", "false");
-				xml.WriteAttributeString("source", Graph.U(arc).Id.ToString(CultureInfo.InvariantCulture));
-				xml.WriteAttributeString("target", Graph.V(arc).Id.ToString(CultureInfo.InvariantCulture));
+				xml.WriteAttributeString("source", NodeId[Graph.U(arc)]);
+				xml.WriteAttributeString("target", NodeId[Graph.V(arc)]);
 				DefinePropertyValues(xml, arc);
 				xml.WriteEndElement(); // edge
 			}
+
 			xml.WriteEndElement(); // graph
 			xml.WriteEndElement(); // graphml
 		}
