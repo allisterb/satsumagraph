@@ -178,6 +178,16 @@ namespace Satsuma.IO.GraphML
 			return false;
 		}
 
+		public T this[object key]
+		{
+			get
+			{
+				T result;
+				TryGetValue(key, out result);
+				return result;
+			}
+		}
+
 		public override void ReadData(XElement x, object key)
 		{
 			if (x == null)
