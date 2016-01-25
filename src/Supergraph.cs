@@ -169,8 +169,20 @@ namespace Satsuma
 		public bool DeleteNode(Node node)
 		{
 			if (!nodes.Remove(node)) return false;
-
 			Func<Arc, bool> arcsToRemove = (a => (U(a) == node || V(a) == node));
+
+			// remove arcs from nodeArcs_... of other ends of the arcs going from "node"
+			foreach (Node otherNode in Nodes())
+			{
+				if (otherNode != node)
+				{
+					Utils.RemoveAll(nodeArcs_All[otherNode], arcsToRemove);
+					Utils.RemoveAll(nodeArcs_Edge[otherNode], arcsToRemove);
+					Utils.RemoveAll(nodeArcs_Forward[otherNode], arcsToRemove);
+					Utils.RemoveAll(nodeArcs_Backward[otherNode], arcsToRemove);
+				}
+			}
+
 			Utils.RemoveAll(arcs, arcsToRemove);
 			Utils.RemoveAll(edges, arcsToRemove);
 			Utils.RemoveAll(arcProperties, arcsToRemove);
