@@ -54,10 +54,26 @@ namespace Satsuma
 			unionCount = 0;
 		}
 
+		/// Gets the node of the contracted graph which contains the given original node as a child.
+		/// \param n A node of the original graph (this includes nodes of the adaptor).
+		/// \return The merged node which contains the given node.
+		public Node GetRepresentative(Node n)
+		{
+			return nodeGroups.WhereIs(n).Representative;
+		}
+
+		/// Gets the nodes which are contracted with the given node.
+		/// \param n A node of the original graph (this includes nodes of the adaptor).
+		/// \return The nodes in the same equivalence class (at least 1).
+		public IEnumerable<Node> GetChildren(Node n)
+		{
+			return nodeGroups.Elements(nodeGroups.WhereIs(n));
+		}
+
 		/// Identifies two nodes so they become one node.
 		/// \param u A node of the original graph (this includes nodes of the adaptor).
 		/// \param v Another node of the original graph (this includes nodes of the adaptor).
-		/// \return The object representing the merged node. Return value will be either \e u or \e v.
+		/// \return The object representing the merged node.
 		public Node Merge(Node u, Node v)
 		{
 			var x = nodeGroups.WhereIs(u);
@@ -77,12 +93,12 @@ namespace Satsuma
 		
 		public Node U(Arc arc)
 		{
-			return nodeGroups.WhereIs(graph.U(arc)).Representative;
+			return GetRepresentative(graph.U(arc));
 		}
 
 		public Node V(Arc arc)
 		{
-			return nodeGroups.WhereIs(graph.V(arc)).Representative;
+			return GetRepresentative(graph.V(arc));
 		}
 
 		public bool IsEdge(Arc arc)
@@ -93,7 +109,7 @@ namespace Satsuma
 		public IEnumerable<Node> Nodes()
 		{
 			foreach (var node in graph.Nodes())
-				if (nodeGroups.WhereIs(node).Representative == node) yield return node;
+				if (GetRepresentative(node) == node) yield return node;
 		}
 
 		public IEnumerable<Arc> Arcs(ArcFilter filter = ArcFilter.All)
@@ -103,8 +119,7 @@ namespace Satsuma
 
 		public IEnumerable<Arc> Arcs(Node u, ArcFilter filter = ArcFilter.All)
 		{
-			DisjointSetSet<Node> x = nodeGroups.WhereIs(u);
-			foreach (var node in nodeGroups.Elements(x))
+			foreach (var node in GetChildren(u))
 			{
 				foreach (var arc in graph.Arcs(node, filter))
 				{
@@ -144,7 +159,7 @@ namespace Satsuma
 
 		public bool HasNode(Node node)
 		{
-			return node == nodeGroups.WhereIs(node).Representative;
+			return node == GetRepresentative(node);
 		}
 
 		public bool HasArc(Arc arc)
