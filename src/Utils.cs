@@ -56,6 +56,20 @@ namespace Satsuma
 			return (dict[key] = new V());
 		}
 
+		/// May reorder the elements.
+		public static void RemoveAll<T>(List<T> list, Func<T, bool> condition)
+		{
+			for (int i = 0; i < list.Count; ++i)
+			{
+				if (condition(list[i]))
+				{
+					if (i < list.Count - 1)
+						list[i] = list[list.Count - 1];
+					list.RemoveAt(list.Count - 1);
+				}
+			}
+		}
+
 		public static void RemoveAll<T>(HashSet<T> set, Func<T, bool> condition)
 		{
 			foreach (var x in set.Where(condition).ToList())
