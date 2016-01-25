@@ -260,7 +260,7 @@ namespace Satsuma.IO
 			ArcMaps.Clear();
 			Attributes.Clear();
 
-			Regex splitRegex = new Regex("\\s*(?:(\"(?:\\\"|.)*\")|(\\S+))\\s*", RegexOptions.Compiled);
+			Regex splitRegex = new Regex(@"\s*((""(\""|.)*"")|(\S+))\s*", RegexOptions.Compiled);
 			string section = "";
 			Directedness currDir = Directedness.Directed; // are currently read arcs directed?
 			bool prevHeader = false;
@@ -276,7 +276,7 @@ namespace Satsuma.IO
 				List<string> tokens = splitRegex.Matches(line).Cast<Match>()
 					.Select(m => 
 						{
-							string s = m.Value;
+							string s = m.Groups[1].Value;
 							if (s == "") return s;
 							if (s[0] == '"' && s[s.Length-1] == '"')
 								s = Unescape(s.Substring(1, s.Length-2));
