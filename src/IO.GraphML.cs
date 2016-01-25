@@ -72,7 +72,7 @@ namespace Satsuma.IO.GraphML
 			switch (domain)
 			{
 				case PropertyDomain.Node: return "node";
-				case PropertyDomain.Arc: return "arc";
+				case PropertyDomain.Arc: return "edge";
 				case PropertyDomain.Graph: return "graph";
 				default: return "all";
 			}
@@ -320,6 +320,19 @@ namespace Satsuma.IO.GraphML
 			}
 		}
 
+		private static string ValueToGraphML(object value)
+		{
+			switch (Type)
+			{
+				case StandardType.Bool: return (bool)value ? "true" : "false";
+				case StandardType.Double: return ((double)value).ToString(CultureInfo.InvariantCulture);
+				case StandardType.Float: return ((float)value).ToString(CultureInfo.InvariantCulture);
+				case StandardType.Int: return ((int)value).ToString(CultureInfo.InvariantCulture);
+				case StandardType.Long: return ((long)value).ToString(CultureInfo.InvariantCulture);
+				default: return value.ToString();
+			}
+		}
+
 		public override XElement GetKeyElement()
 		{
 			XElement x = base.GetKeyElement();
@@ -334,7 +347,7 @@ namespace Satsuma.IO.GraphML
 
 		protected override XElement WriteValue(T value)
 		{
-			return new XElement("dummy", value.ToString());
+			return new XElement("dummy", ValueToGraphML(value));
 		}
 	}
 
