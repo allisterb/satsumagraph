@@ -1,5 +1,5 @@
 Satsuma Graph Library
-Copyright © 2013 Balázs Szalkai
+Copyright © 2013-2016 Balázs Szalkai
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
