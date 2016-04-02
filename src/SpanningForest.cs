@@ -105,7 +105,9 @@ namespace Satsuma
 					if (processed.Contains(v)) continue;
 
 					TCost arcCost = Cost(arc);
-					if (arcCost.CompareTo(priorityQueue[v]) < 0)
+					TCost vCost;
+					bool vInPriorityQueue = priorityQueue.TryGetPriority(v, out vCost);
+					if (!vInPriorityQueue || arcCost.CompareTo(vCost) < 0)
 					{
 						priorityQueue[v] = arcCost;
 						parentArc[v] = arc;
