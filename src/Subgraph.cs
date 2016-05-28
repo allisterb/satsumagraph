@@ -30,9 +30,12 @@ namespace Satsuma
 {
 	/// Adaptor for hiding/showing nodes/arcs of an underlying graph.
 	/// Node and Arc objects are interchangeable between the adaptor and the original graph.
+	///
 	/// The underlying graph can be modified while using this adaptor,
 	/// as long as no nodes/arcs are deleted; and newly added nodes/arcs are explicitly enabled/disabled,
 	/// since enabledness of newly added nodes/arcs is undefined.
+	///
+	/// By default, all nodes and arcs are enabled.
 	/// \sa Supergraph
 	public sealed class Subgraph : IGraph
 	{

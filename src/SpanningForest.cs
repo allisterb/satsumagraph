@@ -60,14 +60,23 @@ namespace Satsuma
 
 		/// Contains the arcs of a cheapest spanning forest.
 		public HashSet<Arc> Forest { get; private set; }
+		/// The cheapest spanning forest as a subgraph of the original graph.
+		public Subgraph ForestGraph { get; private set; }
 
 		public Prim(IGraph graph, Func<Arc, TCost> cost)
 		{
 			Graph = graph;
 			Cost = cost;
 			Forest = new HashSet<Arc>();
+			ForestGraph = new Subgraph(graph);
+			ForestGraph.EnableAllArcs(false);
 
 			Run();
+		}
+
+		public Prim(IGraph graph, Dictionary<Arc, TCost> cost)
+			: this(graph, arc => cost[arc])
+		{
 		}
 
 		private void Run()
@@ -97,7 +106,9 @@ namespace Satsuma
 				Node n = priorityQueue.Peek();
 				priorityQueue.Pop();
 				processed.Add(n);
-				Forest.Add(parentArc[n]);
+				Arc arcToAdd = parentArc[n];
+				Forest.Add(arcToAdd);
+				ForestGraph.Enable(arcToAdd, true);
 
 				foreach (var arc in Graph.Arcs(n))
 				{
@@ -156,6 +167,8 @@ namespace Satsuma
 		/// The forest is empty at the beginning.
 		/// #Run can be used to run the whole algorithm and make a cheapest spanning forest.
 		public HashSet<Arc> Forest { get; private set; }
+		/// The current forest as a subgraph of the original graph.
+		public Subgraph ForestGraph { get; private set; }
 		/// Contains the degree of a node in the found spanning forest.
 		public Dictionary<Node, int> Degree { get; private set; }
 
@@ -170,6 +183,8 @@ namespace Satsuma
 			MaxDegree = maxDegree;
 
 			Forest = new HashSet<Arc>();
+			ForestGraph = new Subgraph(graph);
+			ForestGraph.EnableAllArcs(false);
 			Degree = new Dictionary<Node, int>();
 			foreach (var node in Graph.Nodes()) Degree[node] = 0;
 
@@ -178,6 +193,11 @@ namespace Satsuma
 			arcEnumerator = arcs.GetEnumerator();
 			arcsToGo = Graph.NodeCount() - new ConnectedComponents(Graph).Count;
 			components = new DisjointSet<Node>();
+		}
+
+		public Kruskal(IGraph graph, Dictionary<Arc, TCost> cost)
+			: this(graph, arc => cost[arc], null)
+		{
 		}
 
 		/// Performs a step in Kruskal's algorithm.
@@ -218,6 +238,7 @@ namespace Satsuma
 			if (x == y) return false; // cycle
 
 			Forest.Add(arc);
+			ForestGraph.Enable(arc, true);
 			components.Union(x, y);
 			Degree[u]++;
 			Degree[v]++;

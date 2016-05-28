@@ -695,6 +695,34 @@ namespace Satsuma.IO.GraphML
 			}
 		}
 
+		/// Adds a standard node property with the given name and values.
+		/// The newly added property will assign a value to each node of the graph.
+		/// The values returned by getValueForNode are cached in a dictionary.
+		/// Does not check whether a property with this name already exists!
+		public void AddStandardNodeProperty<T>(string name, Func<Node,T> getValueForNode)
+		{
+			StandardProperty<T> prop = new StandardProperty<T>();
+			prop.Domain = PropertyDomain.Node;
+			prop.Name = name;
+			foreach (var node in Graph.Nodes())
+				prop.Values[node] = getValueForNode(node);
+			Properties.Add(prop);
+		}
+
+		/// Adds a standard arc property with the given name and values.
+		/// The newly added property will assign a value to each arc of the graph.
+		/// The values returned by getValueForArc are cached in a dictionary.
+		/// Does not check whether a property with this name already exists!
+		public void AddStandardArcProperty<T>(string name, Func<Arc, T> getValueForArc)
+		{
+			StandardProperty<T> prop = new StandardProperty<T>();
+			prop.Domain = PropertyDomain.Arc;
+			prop.Name = name;
+			foreach (var arc in Graph.Arcs())
+				prop.Values[arc] = getValueForArc(arc);
+			Properties.Add(prop);
+		}
+
 		/// Saves to an XML writer.
 		private void Save(XmlWriter xml)
 		{
