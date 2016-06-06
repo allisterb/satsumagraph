@@ -240,7 +240,7 @@ namespace Satsuma.IO.GraphML
 
 	/// Represents a standard GraphML property (attribute), which may assign primitive values to objects.
 	///
-	/// Example (assigning string values to nodes):
+	/// Example: <b>Assigning string values to nodes</b>
 	/// \code
 	/// using GraphML = Satsuma.IO.GraphML;
 	/// // [...]
@@ -437,7 +437,7 @@ namespace Satsuma.IO.GraphML
 	
 	/// A GraphML property describing the visual appearance of the nodes.
 	///
-	/// Example (defining node appearances):
+	/// Example: <b>Defining node appearances</b>
 	/// \code
 	/// using GraphML = Satsuma.IO.GraphML;
 	/// // [...]
@@ -493,7 +493,7 @@ namespace Satsuma.IO.GraphML
 	/// See <a href='http://graphml.graphdrawing.org/'>the GraphML website</a>
 	/// for information on the GraphML format.
 	///
-	/// Example (loading a graph and some special values for objects):
+	/// Example: <b>Loading a graph and some special values for objects</b>
 	/// \code
 	/// using GraphML = Satsuma.IO.GraphML;
 	/// // [...]
@@ -525,14 +525,32 @@ namespace Satsuma.IO.GraphML
 	/// }
 	/// \endcode
 	///
-	/// Example (saving a complete bipartite graph without any bells and whistles):
+	/// Example: <b>Saving a complete bipartite graph without any bells and whistles</b>
 	/// \code
 	/// GraphML.GraphMLFormat f = new GraphML.GraphMLFormat();
 	/// f.Graph = new CompleteBipartiteGraph(3, 5, Directedness.Undirected);
 	/// f.Save(@"c:\my_little_graph.graphml");
 	/// \endcode
+	/// 
+	/// Example: <b>Saving a graph with node and arc annotations</b>
+	/// \code
+	/// string[] nodeNames =       { "London", "Paris", "New York" };
+	/// double[,] distanceMatrix = { {    0,     343.93, 5576.46 },
+	///                              {  343.93,    0,    5843.78 },
+	///                              { 5576.46, 5843.78,    0    } };
+	/// CompleteGraph g = new CompleteGraph(nodeNames.Length, Directedness.Undirected);
+	/// Kruskal<double> kruskal = new Kruskal<double>(g,
+	///		arc => distanceMatrix[g.GetNodeIndex(g.U(arc)), g.GetNodeIndex(g.V(arc))]);
+	/// kruskal.Run();
+	/// GraphMLFormat gml = new GraphMLFormat();
+	/// gml.Graph = kruskal.ForestGraph;
+	/// gml.AddStandardNodeProperty("name", n => nodeNames[g.GetNodeIndex(n)]);
+	/// gml.AddStandardArcProperty("color", a => distanceMatrix[g.GetNodeIndex(g.U(a)), g.GetNodeIndex(g.V(a))] &lt; 1000 ? "#ff0000" : "#0000ff");
+	/// gml.AddStandardArcProperty("distance", a => distanceMatrix[g.GetNodeIndex(g.U(a)), g.GetNodeIndex(g.V(a))]);
+	/// gml.Save("tree_with_annotations.graphml");
+	/// \endcode
 	///
-	/// For examples on saving extra values for nodes, arcs or the graph itself;
+	/// For more detailed examples on saving extra values for nodes, arcs or the graph itself;
 	/// see the descendants of GraphMLProperty, such as StandardProperty&lt;T&gt; and NodeGraphicsProperty.
 	public sealed class GraphMLFormat
 	{
