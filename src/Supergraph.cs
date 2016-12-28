@@ -24,6 +24,7 @@ freely, subject to the following restrictions:
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Satsuma
@@ -137,6 +138,13 @@ namespace Satsuma
 		public Arc AddArc(Node u, Node v, Directedness directedness)
 		{
 			if (ArcCount() == int.MaxValue) throw new InvalidOperationException("Error: too many arcs!");
+
+#if DEBUG
+			// check if u and v are valid nodes of the graph
+			Debug.Assert(HasNode(u));
+			Debug.Assert(HasNode(v));
+#endif
+
 			Arc a = new Arc(arcAllocator.Allocate());
 			arcs.Add(a);
 			bool isEdge = (directedness == Directedness.Undirected);

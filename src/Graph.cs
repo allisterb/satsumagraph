@@ -152,6 +152,8 @@ namespace Satsuma
 		/// Adds a node to the graph.
 		Node AddNode();
 		/// Adds a directed arc or an edge (undirected arc) between u and v to the graph.
+		/// Only works if the two nodes are valid and belong to the graph,
+		/// otherwise no exception is guaranteed to be thrown and the result is undefined behaviour.
 		/// \param u The source node.
 		/// \param v The target node.
 		/// \param directedness Determines whether the new arc will be directed or an edge (i.e. undirected).
