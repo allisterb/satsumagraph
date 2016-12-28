@@ -30,6 +30,7 @@ namespace Satsuma
 	/// Represents a set in the DisjointSet data structure.
 	/// The purpose is to ensure type safety by distinguishing between sets and their representatives.
 	public struct DisjointSetSet<T> : IEquatable<DisjointSetSet<T>>
+		where T : IEquatable<T>
 	{
 		public T Representative { get; private set; }
 
@@ -73,6 +74,7 @@ namespace Satsuma
 
 	/// Interface to a read-only disjoint-set data structure.
 	public interface IReadOnlyDisjointSet<T>
+		where T : IEquatable<T>
 	{
 		/// Returns the set where the given element belongs.
 		DisjointSetSet<T> WhereIs(T element);
@@ -84,6 +86,7 @@ namespace Satsuma
 	/// In its default state the disjoint-set is discretized, i.e. each point forms a one-element set.
 	/// \e Clear reverts the data structure to this state.
 	public interface IDisjointSet<T> : IReadOnlyDisjointSet<T>, IClearable
+		where T : IEquatable<T>
 	{
 		/// Merges two sets and returns the merged set.
 		DisjointSetSet<T> Union(DisjointSetSet<T> a, DisjointSetSet<T> b);
@@ -91,6 +94,7 @@ namespace Satsuma
 
 	/// Implementation of the disjoint-set data structure.
 	public sealed class DisjointSet<T> : IDisjointSet<T>
+		where T : IEquatable<T>
 	{
 		private readonly Dictionary<T, T> parent;
 		// The first child of a representative, or the next sibling of a child.

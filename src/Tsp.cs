@@ -146,6 +146,7 @@ namespace Satsuma
 	/// Running time: O(n<sup>2</sup>).
 	/// \tparam TNode The node type.
 	public sealed class InsertionTsp<TNode> : ITsp<TNode>
+		where TNode : IEquatable<TNode>
 	{
 		/// The nodes the salesman has to visit.
 		public IEnumerable<TNode> Nodes { get; private set; }
@@ -231,7 +232,8 @@ namespace Satsuma
 			{
 				var llnode2 = llnode.Next;
 				double increase = Cost(llnode.Value, node) + Cost(node, llnode2.Value);
-				if (llnode != llnode2) increase -= Cost(llnode.Value, llnode2.Value);
+				if (!llnode.Value.Equals(llnode2.Value))
+					increase -= Cost(llnode.Value, llnode2.Value);
 				if (increase < bestIncrease)
 				{
 					bestIncrease = increase;
