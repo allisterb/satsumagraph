@@ -24,7 +24,9 @@ freely, subject to the following restrictions:
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Xml.Linq;
 
 namespace Satsuma
@@ -105,6 +107,51 @@ namespace Satsuma
 		public static XElement ElementLocal(XElement xParent, string localName)
 		{
 			return ElementsLocal(xParent, localName).FirstOrDefault();
+		}
+
+		/// Executes a program with a given list of arguments.
+		/// Returns true in process completed execution,
+		/// false if an error occurred or execution timed out.
+		internal static bool ExecuteCommand(string filename, string args, int timeoutSeconds = 0)
+		{
+			try
+			{
+				ProcessStartInfo psi = new ProcessStartInfo(filename, args);
+				psi.RedirectStandardOutput = true;
+				psi.RedirectStandardError = true;
+				psi.CreateNoWindow = true;
+				psi.UseShellExecute = false;
+
+				Process p = new Process();
+				p.StartInfo = psi;
+				p.Start();
+
+				if (timeoutSeconds != 0)
+				{
+					int tStart = Environment.TickCount;
+					while (!p.HasExited && Environment.TickCount - tStart < timeoutSeconds * 1000)
+					{
+						Thread.Sleep(100);
+					}
+					if (!p.HasExited)
+					{
+						p.Kill();
+						while (!p.HasExited)
+							Thread.Sleep(100);
+						return false;
+					}
+				}
+
+				// TODO we could return these
+				//string stdout = p.StandardOutput.ReadToEnd();
+				//string stderr = p.StandardError.ReadToEnd();
+				p.WaitForExit();
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
 		}
 	}
 
