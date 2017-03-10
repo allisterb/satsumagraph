@@ -26,6 +26,8 @@ namespace Satsuma
 	/// The Node and Arc set of the adaptor is a subset of that of the original graph.
 	/// The underlying graph can be modified while using this adaptor,
 	/// as long as no matched nodes and matching arcs are deleted.
+	/// 
+	/// A newly created Matching object has zero arcs.
 	public sealed class Matching : IMatching, IClearable
 	{
 		public IGraph Graph { get; private set; }
