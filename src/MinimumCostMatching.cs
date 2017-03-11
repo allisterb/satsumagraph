@@ -29,8 +29,8 @@ using System.Linq;
 namespace Satsuma
 {
 	/// Finds a minimum cost matching in a bipartite graph using the network simplex method.
-	/// \sa MaximumMatching
-	public sealed class MinimumCostMatching
+	/// \sa BipartiteMaximumMatching
+	public sealed class BipartiteMinimumCostMatching
 	{
 		/// The input graph.
 		public IGraph Graph { get; private set; }
@@ -46,7 +46,7 @@ namespace Satsuma
 		/// Null if a matching of the specified size could not be found.
 		public IMatching Matching { get; private set; }
 
-		public MinimumCostMatching(IGraph graph, Func<Node, bool> isRed, Func<Arc, double> cost,
+		public BipartiteMinimumCostMatching(IGraph graph, Func<Node, bool> isRed, Func<Arc, double> cost,
 			int minimumMatchingSize = 0, int maximumMatchingSize = int.MaxValue)
 		{
 			Graph = graph;

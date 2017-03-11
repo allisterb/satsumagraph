@@ -29,8 +29,8 @@ using System.Linq;
 namespace Satsuma
 {
 	/// Finds a maximum matching in a bipartite graph using the alternating path algorithm.
-	/// \sa MinimumCostMatching
-	public sealed class MaximumMatching : IClearable
+	/// \sa BipartiteMinimumCostMatching
+	public sealed class BipartiteMaximumMatching : IClearable
 	{
 		public IGraph Graph { get; private set; }
 		/// Describes a bipartition of the input graph by dividing its nodes into red and blue ones.
@@ -43,7 +43,7 @@ namespace Satsuma
 
 		private readonly HashSet<Node> unmatchedRedNodes;
 
-		public MaximumMatching(IGraph graph, Func<Node, bool> isRed)
+		public BipartiteMaximumMatching(IGraph graph, Func<Node, bool> isRed)
 		{
 			Graph = graph;
 			IsRed = isRed;
