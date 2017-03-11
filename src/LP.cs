@@ -198,9 +198,20 @@ namespace Satsuma.LP
 		/// Makes a copy of the supplied Expression.
 		public Expression(Expression x)
 		{
+			Coefficients = new Dictionary<Variable, double>();
 			foreach (Variable v in x.Coefficients.Keys)
 				Coefficients[v] = x.Coefficients[v];
 			Bias = x.Bias;
+		}
+
+		public bool IsConstant
+		{
+			get { return Coefficients.Count == 0; }
+		}
+
+		public bool IsZero
+		{
+			get { return Coefficients.Count == 0 && Bias == 0; }
 		}
 
 		public void Add(Variable v, double coeff)
@@ -258,6 +269,11 @@ namespace Satsuma.LP
 
 		public static Expression operator +(Expression x, Expression y)
 		{
+			if (y.IsZero)
+				return x;
+			if (x.IsZero)
+				return y;
+
 			Expression expr = new Expression(x);
 			foreach (var kv in y.Coefficients)
 				expr.Add(kv.Key, kv.Value);
@@ -295,6 +311,9 @@ namespace Satsuma.LP
 
 		public static Expression operator -(Expression x, Expression y)
 		{
+			if (y.IsZero)
+				return x;
+
 			Expression expr = new Expression(x);
 			foreach (var kv in y.Coefficients)
 				expr.Add(kv.Key, -kv.Value);
@@ -512,10 +531,21 @@ namespace Satsuma.LP
 
 		private static void Encode(Constraint c, StringBuilder sb)
 		{
-			Encode(c.Lhs, sb);
-			Encode(c.Rhs, sb, -1);
+			// Apparently SCIP does not like x1 + x2 - 1 <= 0 for binary variables
+			// but x1 + x2 <= 1 works fine.
+			// So we use the second variant, only bring the variables from Rhs to Lhs, leave the bias there.
+			Expression lhs = c.Lhs;
+			double rhsValue = c.Rhs.Bias;
+			if (!c.Rhs.IsConstant)
+			{
+				// bring all vars to lhs
+				lhs -= c.Rhs;
+				lhs.Bias = c.Lhs.Bias;
+			}
+
+			Encode(lhs, sb);
 			Encode(c.Operator, sb);
-			sb.Append(" 0");
+			sb.Append(" "+rhsValue.ToString("+0;-#", CultureInfo.InvariantCulture));
 		}
 
 		private static string Encode(Constraint c)
@@ -534,7 +564,11 @@ namespace Satsuma.LP
 				sw.WriteLine(Encode(constraint));
 			sw.WriteLine("Bounds");
 			foreach (Variable v in problem.Variables.Values)
-				sw.WriteLine(v.LowerBound.ToString(CultureInfo.InvariantCulture) + " <= " + Encode(v) + " <= " + v.UpperBound.ToString(CultureInfo.InvariantCulture));
+			{
+				bool binaryTrivial = (v.Type == VariableType.Binary && v.LowerBound <= 0 && v.UpperBound >= 1);
+				if (!binaryTrivial)
+					sw.WriteLine(v.LowerBound.ToString(CultureInfo.InvariantCulture) + " <= " + Encode(v) + " <= " + v.UpperBound.ToString(CultureInfo.InvariantCulture));
+			}
 			sw.WriteLine("General");
 			foreach (Variable v in problem.Variables.Values)
 				if (v.Type == VariableType.Integer)
@@ -661,9 +695,9 @@ namespace Satsuma.LP
 		/// Maximum allowed time for SCIP to run, in seconds.
 		public int TimeoutSeconds;
 
-		public ScipSolver()
+		public ScipSolver(string scipPath)
 		{
-			ScipPath = null;
+			ScipPath = scipPath;
 			TempFolder = System.IO.Path.GetTempPath();
 		}
 
@@ -748,6 +782,7 @@ namespace Satsuma.LP
 			while (File.Exists(lpFilename) || File.Exists(outFilename));
 
 			CplexLPFormat.Save(problem, lpFilename);
+			//CplexLPFormat.Save(problem, @"d:\temp\temp.lp"); // debug
 			Solution solution = new Solution(problem);
 			if (Utils.ExecuteCommand(ScipPath, "-f \"" + lpFilename + "\" -l \"" + outFilename + '"', TimeoutSeconds))
 				LoadSolution(solution, outFilename);
