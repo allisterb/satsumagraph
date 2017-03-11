@@ -41,6 +41,74 @@ namespace Satsuma
 	/// Various utilities used by other classes.
 	internal static class Utils
 	{
+		/// Returns the first child element that matches the given local name, or null if none found.
+		public static XElement ElementLocal(XElement xParent, string localName)
+		{
+			return ElementsLocal(xParent, localName).FirstOrDefault();
+		}
+
+		/// Returns all child elements filtered by local name.
+		public static IEnumerable<XElement> ElementsLocal(XElement xParent, string localName)
+		{
+			return xParent.Elements().Where(x => x.Name.LocalName == localName);
+		}
+
+		/// Executes a program with a given list of arguments.
+		/// Returns true in process completed execution,
+		/// false if an error occurred or execution timed out.
+		internal static bool ExecuteCommand(string filename, string processArgs, int timeoutSeconds = 0,
+			bool silent = false)
+		{
+			try
+			{
+				ProcessStartInfo psi = new ProcessStartInfo(filename, processArgs);
+				psi.RedirectStandardOutput = true;
+				psi.RedirectStandardError = true;
+				psi.CreateNoWindow = true;
+				psi.UseShellExecute = false;
+
+				Process p = new Process();
+				p.StartInfo = psi;
+				if (!silent)
+				{
+					p.OutputDataReceived += (sender, a) => Console.WriteLine(a.Data);
+					p.ErrorDataReceived += (sender, a) => Console.Error.WriteLine(a.Data);
+				}
+				p.Start();
+				if (!silent)
+				{
+					p.BeginOutputReadLine();
+					p.BeginErrorReadLine();
+				}
+
+				if (timeoutSeconds != 0)
+				{
+					int tStart = Environment.TickCount;
+					while (!p.HasExited && Environment.TickCount - tStart < timeoutSeconds * 1000)
+					{
+						Thread.Sleep(100);
+					}
+					if (!p.HasExited)
+					{
+						p.Kill();
+						while (!p.HasExited)
+							Thread.Sleep(100);
+						return false;
+					}
+				}
+
+				// TODO we could return these
+				//string stdout = p.StandardOutput.ReadToEnd();
+				//string stderr = p.StandardError.ReadToEnd();
+				p.WaitForExit();
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
 		/// Returns the largest power of two which is at most Math.Abs(d), or 0 if none exists.
 		public static double LargestPowerOfTwo(double d)
 		{
@@ -97,61 +165,31 @@ namespace Satsuma
 			}
 		}
 
-		/// Returns all child elements filtered by local name.
-		public static IEnumerable<XElement> ElementsLocal(XElement xParent, string localName)
+		/// Implements a random-seeming but deterministic 1-to-1 mapping on ulongs.
+		public static ulong ReversibleHash1(ulong x)
 		{
-			return xParent.Elements().Where(x => x.Name.LocalName == localName);
+			x += 11633897956271718833UL;
+			x *= 8363978825398262719UL;
+			x ^= x >> 13;
+			return x;
 		}
 
-		/// Returns the first child element that matches the given local name, or null if none found.
-		public static XElement ElementLocal(XElement xParent, string localName)
+		/// Implements a random-seeming but deterministic 1-to-1 mapping on ulongs.
+		public static ulong ReversibleHash2(ulong x)
 		{
-			return ElementsLocal(xParent, localName).FirstOrDefault();
+			x += 2254079448387046741UL;
+			x *= 16345256107010564221UL;
+			x ^= x << 31;
+			return x;
 		}
 
-		/// Executes a program with a given list of arguments.
-		/// Returns true in process completed execution,
-		/// false if an error occurred or execution timed out.
-		internal static bool ExecuteCommand(string filename, string args, int timeoutSeconds = 0)
+		/// Implements a random-seeming but deterministic 1-to-1 mapping on ulongs.
+		public static ulong ReversibleHash3(ulong x)
 		{
-			try
-			{
-				ProcessStartInfo psi = new ProcessStartInfo(filename, args);
-				psi.RedirectStandardOutput = true;
-				psi.RedirectStandardError = true;
-				psi.CreateNoWindow = true;
-				psi.UseShellExecute = false;
-
-				Process p = new Process();
-				p.StartInfo = psi;
-				p.Start();
-
-				if (timeoutSeconds != 0)
-				{
-					int tStart = Environment.TickCount;
-					while (!p.HasExited && Environment.TickCount - tStart < timeoutSeconds * 1000)
-					{
-						Thread.Sleep(100);
-					}
-					if (!p.HasExited)
-					{
-						p.Kill();
-						while (!p.HasExited)
-							Thread.Sleep(100);
-						return false;
-					}
-				}
-
-				// TODO we could return these
-				//string stdout = p.StandardOutput.ReadToEnd();
-				//string stderr = p.StandardError.ReadToEnd();
-				p.WaitForExit();
-				return true;
-			}
-			catch
-			{
-				return false;
-			}
+			x += 5687820266445524563UL;
+			x *= 15961264385709064403UL;
+			x ^= x >> 19;
+			return x;
 		}
 	}
 

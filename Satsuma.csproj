@@ -45,6 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\Isomorphism.cs" />
+    <Compile Include="src\LP.OptimalVertexSet.cs" />
+    <Compile Include="src\LP.OptimalSubgraph.cs" />
+    <Compile Include="src\LP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\BellmanFord.cs" />
     <Compile Include="src\Bfs.cs" />
@@ -60,8 +64,8 @@
     <Compile Include="src\IO.GraphML.cs" />
     <Compile Include="src\Layout.cs" />
     <Compile Include="src\Matching.cs" />
-    <Compile Include="src\MaximumMatching.cs" />
-    <Compile Include="src\MinimumCostMatching.cs" />
+    <Compile Include="src\BipartiteMaximumMatching.cs" />
+    <Compile Include="src\BipartiteMinimumCostMatching.cs" />
     <Compile Include="src\NetworkSimplex.cs" />
     <Compile Include="src\Path.cs" />
     <Compile Include="src\Preflow.cs" />
