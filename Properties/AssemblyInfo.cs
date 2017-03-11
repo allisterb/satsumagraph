@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Satsuma")]
-[assembly: AssemblyCopyright("Copyright © 2013-16 Balázs Szalkai")]
+[assembly: AssemblyCopyright("Copyright © 2013-17 Balázs Szalkai")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
