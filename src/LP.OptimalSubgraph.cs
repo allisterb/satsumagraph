@@ -57,12 +57,16 @@ namespace Satsuma.LP
 		public Func<Arc, double> DegreeWeight { get; set; }
 
 		/// The (inclusive) lower bound on weighted node in-degrees. If null, no lower bound is imposed at all.
+		/// Loop edges count twice.
 		public Func<Node, double> MinInDegree { get; set; }
 		/// The (inclusive) upper bound on weighted node in-degrees. If null, no upper bound is imposed at all.
+		/// Loop edges count twice.
 		public Func<Node, double> MaxInDegree { get; set; }
 		/// The (inclusive) lower bound on weighted node out-degrees. If null, no lower bound is imposed at all.
+		/// Loop edges count twice.
 		public Func<Node, double> MinOutDegree { get; set; }
 		/// The (inclusive) upper bound on weighted node out-degrees. If null, no upper bound is imposed at all.
+		/// Loop edges count twice.
 		public Func<Node, double> MaxOutDegree { get; set; }
 		/// The (inclusive) lower bound on weighted node degrees. If null, no lower bound is imposed at all.
 		/// Keep in mind that the degree is the sum of the indegree and the outdegree, so loop arcs count twice.
@@ -114,7 +118,8 @@ namespace Satsuma.LP
 			if (MinArcCount > 0 || MaxArcCount < int.MaxValue || ArcCountWeight != 0)
 			{
 				CostFunctions.Add(new CostFunction(cost: (arc => 1.0),
-					lowerBound: (double)MinArcCount - 0.5, upperBound: (double)MaxArcCount + 0.5,
+					lowerBound: MinArcCount > 0 ? (double)MinArcCount - 0.5 : double.NegativeInfinity,
+					upperBound: MaxArcCount < int.MaxValue ? (double)MaxArcCount + 0.5 : double.PositiveInfinity,
 					objectiveWeight: ArcCountWeight));
 			}
 
@@ -136,7 +141,7 @@ namespace Satsuma.LP
 					Expression cSum = 0.0;
 					foreach (Arc a in Graph.Arcs())
 					{
-						cSum += c.Cost(a) * problem.GetVariable(a);
+						cSum.Add(problem.GetVariable(a), c.Cost(a));
 					}
 					if (c.ObjectiveWeight != 0)
 						problem.Objective += c.ObjectiveWeight * cSum;
@@ -167,16 +172,22 @@ namespace Satsuma.LP
 					{
 						Expression inDegree = 0;
 						Expression outDegree = 0;
+						Expression degree = 0;
 						foreach (Arc a in Graph.Arcs(n))
 						{
 							double weight = (DegreeWeight != null ? DegreeWeight(a) : 1);
 							if (weight != 0)
 							{
-								Expression add = weight * problem.GetVariable(a);
-								if (Graph.U(a) == n || Graph.IsEdge(a))
-									outDegree += add;
-								if (Graph.V(a) == n || Graph.IsEdge(a))
-									inDegree += add;
+								Node u = Graph.U(a);
+								Node v = Graph.V(a);
+								bool isEdge = Graph.IsEdge(a);
+								bool isLoop = u == v;
+								Variable avar = problem.GetVariable(a);
+								degree.Add(avar, isLoop ? 2 * weight : weight);
+								if (u == n || isEdge)
+									outDegree.Add(avar, (isLoop && isEdge) ? 2 * weight : weight);
+								if (v == n || isEdge)
+									inDegree.Add(avar, (isLoop && isEdge) ? 2 * weight : weight);
 							}
 						}
 						if (myMinInDegree > double.MinValue)
@@ -189,14 +200,10 @@ namespace Satsuma.LP
 						if (myMaxOutDegree < double.MaxValue)
 							problem.Constraints.Add(outDegree <= myMaxOutDegree);
 
-						if (myMinDegree > double.MinValue || myMaxDegree < double.MaxValue)
-						{
-							Expression degree = inDegree + outDegree;
-							if (myMinDegree > double.MinValue)
-								problem.Constraints.Add(degree >= myMinDegree);
-							if (myMaxDegree < double.MaxValue)
-								problem.Constraints.Add(degree <= myMaxDegree);
-						}
+						if (myMinDegree > double.MinValue)
+							problem.Constraints.Add(degree >= myMinDegree);
+						if (myMaxDegree < double.MaxValue)
+							problem.Constraints.Add(degree <= myMaxDegree);
 					}
 				}
 			}
@@ -215,7 +222,8 @@ namespace Satsuma.LP
 	}
 
 	/// Computes a maximum matching in an arbitrary graph, using integer programming.
-	public sealed class MaximumMatching
+	/// \sa #BipartiteMaximumMatching, #LPMinimumCostMatching
+	public sealed class LPMaximumMatching
 	{
 		public IGraph Graph { get; private set; }
 
@@ -228,7 +236,7 @@ namespace Satsuma.LP
 		/// Otherwise, Matching is null.
 		public IMatching Matching { get { return matching; } }
 
-		public MaximumMatching(ISolver solver, IGraph graph)
+		public LPMaximumMatching(ISolver solver, IGraph graph)
 		{
 			Graph = graph;
 
@@ -251,8 +259,8 @@ namespace Satsuma.LP
 	}
 	
 	/// Finds a minimum cost matching in an arbitrary graph using integer programming.
-	/// \sa #LP.MaximumMatching, #MinimumCostMatching
-	public sealed class MinimumCostMatching
+	/// \sa #LPMaximumMatching, #BipartiteMinimumCostMatching
+	public sealed class LPMinimumCostMatching
 	{
 		/// The input graph.
 		public IGraph Graph { get; private set; }
@@ -272,7 +280,7 @@ namespace Satsuma.LP
 		/// Otherwise, Matching is null.
 		public IMatching Matching { get { return matching; } }
 
-		public MinimumCostMatching(ISolver solver, IGraph graph, Func<Arc, double> cost,
+		public LPMinimumCostMatching(ISolver solver, IGraph graph, Func<Arc, double> cost,
 			int minimumMatchingSize = 0, int maximumMatchingSize = int.MaxValue)
 		{
 			Graph = graph;
