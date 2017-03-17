@@ -227,17 +227,26 @@ namespace Satsuma
 			while (2 * i < Count)
 			{
 				int min = i;
+                TPriority minPriority = priority;
 
-				int child = 2 * i;
-				if (priority.CompareTo(priorities[child]) >= 0) min = child;
+                int child = 2 * i;
+                if (minPriority.CompareTo(priorities[child]) >= 0)
+                {
+                    min = child;
+                    minPriority = priorities[child];
+                }
 
 				child++;
-				if (child < Count && priorities[min].CompareTo(priorities[child]) >= 0) min = child;
+                if (child < Count && minPriority.CompareTo(priorities[child]) >= 0)
+                {
+                    min = child;
+                    minPriority = priorities[child];
+                }
 
 				if (min == i) break;
 
 				payloads[i] = payloads[min];
-				priorities[i] = priorities[min];
+				priorities[i] = minPriority;
 				positions[payloads[i]] = i;
 
 				i = min;
