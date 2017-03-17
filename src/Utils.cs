@@ -39,16 +39,18 @@ namespace Satsuma
 	}
 
 	/// Various utilities used by other classes.
-	internal static class Utils
+    /// This class was made public because the functions can prove useful for Satsuma users,
+    /// but there is no guarantee that the interfaces will remain the same in the future.
+	public static class Utils
 	{
-		/// Returns the first child element that matches the given local name, or null if none found.
-		public static XElement ElementLocal(XElement xParent, string localName)
+        /// Returns the first child element that matches the given local name, or null if none found.
+        internal static XElement ElementLocal(XElement xParent, string localName)
 		{
 			return ElementsLocal(xParent, localName).FirstOrDefault();
 		}
 
-		/// Returns all child elements filtered by local name.
-		public static IEnumerable<XElement> ElementsLocal(XElement xParent, string localName)
+        /// Returns all child elements filtered by local name.
+        internal static IEnumerable<XElement> ElementsLocal(XElement xParent, string localName)
 		{
 			return xParent.Elements().Where(x => x.Name.LocalName == localName);
 		}
@@ -118,7 +120,7 @@ namespace Satsuma
 			return BitConverter.Int64BitsToDouble(bits);
 		}
 
-		public static V MakeEntry<K, V>(Dictionary<K, V> dict, K key)
+        internal static V MakeEntry<K, V>(Dictionary<K, V> dict, K key)
 			where V : new()
 		{
 			V result;
@@ -166,7 +168,7 @@ namespace Satsuma
 		}
 
 		/// Implements a random-seeming but deterministic 1-to-1 mapping on ulongs.
-		public static ulong ReversibleHash1(ulong x)
+		internal static ulong ReversibleHash1(ulong x)
 		{
 			x += 11633897956271718833UL;
 			x *= 8363978825398262719UL;
@@ -174,8 +176,8 @@ namespace Satsuma
 			return x;
 		}
 
-		/// Implements a random-seeming but deterministic 1-to-1 mapping on ulongs.
-		public static ulong ReversibleHash2(ulong x)
+        /// Implements a random-seeming but deterministic 1-to-1 mapping on ulongs.
+        internal static ulong ReversibleHash2(ulong x)
 		{
 			x += 2254079448387046741UL;
 			x *= 16345256107010564221UL;
@@ -183,15 +185,40 @@ namespace Satsuma
 			return x;
 		}
 
-		/// Implements a random-seeming but deterministic 1-to-1 mapping on ulongs.
-		public static ulong ReversibleHash3(ulong x)
+        /// Implements a random-seeming but deterministic 1-to-1 mapping on ulongs.
+        internal static ulong ReversibleHash3(ulong x)
 		{
 			x += 5687820266445524563UL;
 			x *= 15961264385709064403UL;
 			x ^= x >> 19;
 			return x;
 		}
-	}
+
+        public static void Swap<T>(ref T x, ref T y)
+        {
+            T tmp = x;
+            x = y;
+            y = tmp;
+        }
+
+        public static void Swap<T>(IList<T> list, int index1, int index2)
+        {
+            if (index1 != index2)
+            {
+                T tmp = list[index1];
+                list[index1] = list[index2];
+                list[index2] = tmp;
+            }
+        }
+
+        public static void Shuffle<T>(Random rng, IList<T> array)
+        {
+            for (int n = array.Count - 1; n > 0; --n)
+            {
+                Swap(array, rng.Next(n + 1), n);
+            }
+        }
+    }
 
 	/// Allocates integer identifiers.
 	internal abstract class IdAllocator
