@@ -149,8 +149,12 @@ namespace Satsuma
 	/// A graph which can build new nodes and arcs.
 	public interface IBuildableGraph : IClearable
 	{
-		/// Adds a node to the graph.
+		/// Adds a new node to the graph.
 		Node AddNode();
+
+		/// Adds a new node with the specified if to the graph.
+		Node AddNode(long id);
+		
 		/// Adds a directed arc or an edge (undirected arc) between u and v to the graph.
 		/// Only works if the two nodes are valid and belong to the graph,
 		/// otherwise no exception is guaranteed to be thrown and the result is undefined behaviour.

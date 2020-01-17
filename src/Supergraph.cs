@@ -131,10 +131,16 @@ namespace Satsuma
 			if (NodeCount() == int.MaxValue) throw new InvalidOperationException("Error: too many nodes!");
 			Node node = new Node(nodeAllocator.Allocate());
 			nodes.Add(node);
-
 			return node;
 		}
 
+		public Node AddNode(long id)
+		{
+			if (NodeCount() == int.MaxValue) throw new InvalidOperationException("Error: too many nodes!");
+			Node node = new Node(id);
+			nodes.Add(node);
+			return node;
+		}
 		public Arc AddArc(Node u, Node v, Directedness directedness)
 		{
 			if (ArcCount() == int.MaxValue) throw new InvalidOperationException("Error: too many arcs!");
