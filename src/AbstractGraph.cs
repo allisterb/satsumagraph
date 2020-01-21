@@ -27,9 +27,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-using Satsuma;
-
-namespace Sylvester
+namespace Satsuma
 {	
 	public class AbstractGraph : IBuildableGraph, IDestroyableGraph, IGraph
 	{
@@ -48,10 +46,18 @@ namespace Sylvester
 			nodeArcs_Forward = new Dictionary<Node, List<Arc>>();
 			nodeArcs_Backward = new Dictionary<Node, List<Arc>>();
 		}
+        #endregion
+
+        #region Virtual members
+        protected virtual void AddNode(long id)
+		{
+			if (NodeCount() == int.MaxValue) throw new InvalidOperationException($"Node count exceeds maximum of {int.MaxValue}.");
+			nodes.Add(new Node(id));
+		}
 		#endregion
 
-		#region Properties
-		private static readonly List<Arc> EmptyArcList = new List<Arc>();
+        #region Properties
+        private static readonly List<Arc> EmptyArcList = new List<Arc>();
 		#endregion
 
 		#region Methods
@@ -69,18 +75,9 @@ namespace Sylvester
 			nodeArcs_Backward.Clear();
 		}
 
-		public virtual Node AddNode(long id)
-		{
-			if (NodeCount() == int.MaxValue) throw new InvalidOperationException("Error: too many nodes!");
-			Node node = new Node(id);
-			nodes.Add(node);
-
-			return node;
-		}
-
 		public Node AddNode() => throw new NotImplementedException();
 
-		virtual public Arc AddArc(Node u, Node v, Directedness directedness)
+		public virtual Arc AddArc(Node u, Node v, Directedness directedness)
 		{
 			if (ArcCount() == int.MaxValue) throw new InvalidOperationException("Error: too many arcs!");
 
@@ -270,8 +267,8 @@ namespace Sylvester
 		#region Fields
 		private ArcAllocator arcAllocator;
 
-		private HashSet<Node> nodes;
-		private HashSet<Arc> arcs;
+		protected HashSet<Node> nodes;
+		protected HashSet<Arc> arcs;
 		private Dictionary<Arc, ArcProperties> arcProperties;
 		private HashSet<Arc> edges;
 

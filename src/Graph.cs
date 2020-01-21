@@ -151,9 +151,6 @@ namespace Satsuma
 	{
 		/// Adds a new node to the graph.
 		Node AddNode();
-
-		/// Adds a new node with the specified if to the graph.
-		Node AddNode(long id);
 		
 		/// Adds a directed arc or an edge (undirected arc) between u and v to the graph.
 		/// Only works if the two nodes are valid and belong to the graph,
