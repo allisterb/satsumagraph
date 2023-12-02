@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\AbstractGraph.cs" />
     <Compile Include="src\Isomorphism.cs" />
     <Compile Include="src\LP.OptimalVertexSet.cs" />
     <Compile Include="src\LP.OptimalSubgraph.cs" />

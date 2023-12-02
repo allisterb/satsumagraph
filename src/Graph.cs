@@ -90,8 +90,13 @@ namespace Satsuma
 		/// \note Arcs belonging to different graph objects may have the same Id.
 		public long Id { get; private set; }
 
-		/// Creates an Arc which has the supplied id.
-		public Arc(long id)
+        /// <summary>
+        /// Arc or edge weight
+        /// </summary>
+        public long Weight { get; set; }
+
+        /// Creates an Arc which has the supplied id.
+        public Arc(long id)
 			: this()
 		{
 			Id = id;
