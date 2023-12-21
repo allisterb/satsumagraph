@@ -77,7 +77,46 @@ namespace Satsuma
 
 		public Node AddNode() => throw new NotImplementedException();
 
-		public virtual Arc AddArc(Node u, Node v, Directedness directedness)
+        public virtual Arc AddArc(Node u, Node v, Directedness directedness)
+        {
+            if (ArcCount() == int.MaxValue) throw new InvalidOperationException("Error: too many arcs!");
+
+
+            // check if u and v are valid nodes of the graph
+            if (!(HasNode(u) && HasNode(v)))
+            {
+                throw new InvalidOperationException($"One of nodes {u.Id} or {v.Id} does not belong to this graph.");
+            }
+
+            Arc a = new Arc(arcAllocator.Allocate());
+            arcs.Add(a);
+            bool isEdge = (directedness == Directedness.Undirected);
+            arcProperties[a] = new ArcProperties(u, v, isEdge);
+
+            Utils.MakeEntry(nodeArcs_All, u).Add(a);
+            Utils.MakeEntry(nodeArcs_Forward, u).Add(a);
+            Utils.MakeEntry(nodeArcs_Backward, v).Add(a);
+
+            if (isEdge)
+            {
+                edges.Add(a);
+                Utils.MakeEntry(nodeArcs_Edge, u).Add(a);
+            }
+
+            if (v != u)
+            {
+                Utils.MakeEntry(nodeArcs_All, v).Add(a);
+                if (isEdge)
+                {
+                    Utils.MakeEntry(nodeArcs_Edge, v).Add(a);
+                    Utils.MakeEntry(nodeArcs_Forward, v).Add(a);
+                    Utils.MakeEntry(nodeArcs_Backward, u).Add(a);
+                }
+            }
+
+            return a;
+        }
+        public virtual Arc AddArc(Node u, Node v, Directedness directedness, long weight = 0, string label="")
 		{
 			if (ArcCount() == int.MaxValue) throw new InvalidOperationException("Error: too many arcs!");
 
@@ -88,7 +127,7 @@ namespace Satsuma
 				throw new InvalidOperationException($"One of nodes {u.Id} or {v.Id} does not belong to this graph.");
 			}
 
-			Arc a = new Arc(arcAllocator.Allocate());
+			Arc a = new Arc(arcAllocator.Allocate(), weight, label);
 			arcs.Add(a);
 			bool isEdge = (directedness == Directedness.Undirected);
 			arcProperties[a] = new ArcProperties(u, v, isEdge);

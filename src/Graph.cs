@@ -95,13 +95,15 @@ namespace Satsuma
         /// </summary>
         public long Weight { get; set; }
 
+		public string Label { get; private set; }
         /// Creates an Arc which has the supplied id.
-        public Arc(long id)
+        public Arc(long id, long weight=0, string label=null)
 			: this()
 		{
 			Id = id;
+			Weight = weight;
+			Label = label;
 		}
-
 		/// A special arc value, denoting an invalid arc.
 		/// This is the default value for the Arc type.
 		public static Arc Invalid
